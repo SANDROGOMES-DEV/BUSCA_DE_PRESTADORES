@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Prestadores - Zonas RJ</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --bg: #f4f7f6;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: #333; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        
+        .search-container { width: 100%; max-width: 600px; margin-bottom: 30px; position: sticky; top: 10px; z-index: 100; }
+        #search-input { width: 100%; padding: 15px; font-size: 1.1em; border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); outline: none; transition: border-color 0.3s; }
+        #search-input:focus { border-color: var(--primary); }
+
+        .results-container { width: 100%; max-width: 800px; }
+        
+        /* Cards escondidos por padrão */
+        .regiao-card { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: none; /* Escondido */
+        }
+
+        .regiao-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px solid var(--bg);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+        }
+        .regiao-header h2 { margin: 0; font-size: 1.2em; color: var(--primary); }
+        .codigo { font-weight: bold; color: #666; font-size: 0.9em; }
+
+        .bairros-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
+            gap: 10px; 
+        }
+        .bairro-item { 
+            background: #f9f9f9; 
+            padding: 8px; 
+            border-radius: 5px; 
+            font-size: 0.9em; 
+            transition: background 0.2s;
+        }
+        .bairro-item.highlight { background: #fff3cd; font-weight: bold; border: 1px solid #ffeeba; }
+
+        .no-results { text-align: center; color: #888; margin-top: 50px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Digite o nome do bairro ou região..." autocomplete="off">
+    </div>
+
+    <div class="results-container" id="results">
+        <div id="welcome-msg" class="no-results">Digite algo para buscar prestadores por região.</div>
+    </div>
+
+    <div id="data-source" style="display: none;">
+        <div class="regiao-card" data-nome="RIO DE JANEIRO Centro 2101">
+            <div class="regiao-header"><h2>Centro</h2><span class="codigo">2101</span></div>
+            <div class="bairros-grid">
+                <span>Lapa</span><span>Estácio</span><span>Gamboa</span><span>Santo Cristo</span>
+                <span>Glória</span><span>Saúde</span><span>Catumbi</span><span>Santa Teresa</span><span>Cidade Nova</span>
+            </div>
+        </div>
+
+        <div class="regiao-card" data-nome="ZONA NORTE Capital 2102">
+            <div class="regiao-header"><h2>Zona Norte</h2><span class="codigo">2102</span></div>
+            <div class="bairros-grid">
+                <span>Tijuca</span><span>Madureira</span><span>Vila Isabel</span><span>Cascadura</span>
+                <span>Maracanã</span><span>Irajá</span><span>Méier</span><span>Vista Alegre</span>
+                <span>Engenho de Dentro</span><span>Penha</span><span>Engenho Novo</span><span>Ramos</span>
+                <span>Cachambi</span><span>Bonsucesso</span><span>Piedade</span><span>Ilha do Governador</span>
+            </div>
+        </div>
+
+        <div class="regiao-card" data-nome="ZONA OESTE Capital 2103">
+            <div class="regiao-header"><h2>Zona Oeste</h2><span class="codigo">2103</span></div>
+            <div class="bairros-grid">
+                <span>Barra da Tijuca</span><span>Padre Miguel</span><span>Recreio dos Bandeirantes</span><span>Senador Camará</span>
+                <span>Jacarepaguá</span><span>Vila Kennedy</span><span>Campo Grande</span><span>Guaratiba</span>
+                <span>Santa Cruz</span><span>Sepetiba</span><span>Realengo</span><span>Deodoro</span><span>Bangu</span><span>Taguara</span>
+            </div>
+        </div>
+
+        <div class="regiao-card" data-nome="ZONA SUL Capital 2104">
+            <div class="regiao-header"><h2>Zona Sul</h2><span class="codigo">2104</span></div>
+            <div class="bairros-grid">
+                <span>Copacabana</span><span>Catete</span><span>Ipanema</span><span>Cosme Velho</span>
+                <span>Leblon</span><span>Jardim Botânico</span><span>Leme</span><span>Lagoa</span>
+                <span>Botafogo</span><span>Humaitá</span><span>Flamengo</span><span>GÁvea</span><span>Urca</span><span>São Conrado</span>
+            </div>
+        </div>
+
+        <div class="regiao-card" data-nome="BAIXADA FLUMINENSE 2105">
+            <div class="regiao-header"><h2>Baixada Fluminense</h2><span class="codigo">2105</span></div>
+            <div class="bairros-grid">
+                <span>Duque de Caxias</span><span>Queimados</span><span>Nova Iguaçu</span><span>Japeri</span>
+                <span>São João de Meriti</span><span>Paracambi</span><span>Belford Roxo</span><span>Itaguaí</span>
+                <span>Mesquita</span><span>Seropédica</span><span>Nilópolis</span><span>Magé</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('results');
+        const dataSource = document.getElementById('data-source');
+        const cards = dataSource.querySelectorAll('.regiao-card');
+        const welcomeMsg = document.getElementById('welcome-msg');
+
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase().trim();
+            resultsContainer.innerHTML = ''; // Limpa a tela
+
+            if (term === '') {
+                resultsContainer.appendChild(welcomeMsg);
+                return;
+            }
+
+            let foundAny = false;
+
+            cards.forEach(card => {
+                const textContent = card.innerText.toLowerCase();
+                const bairros = card.querySelectorAll('.bairros-grid span');
+                let foundInBairros = false;
+
+                // Verifica se o termo está no nome da região ou em algum bairro
+                if (textContent.includes(term)) {
+                    const clonedCard = card.cloneNode(true);
+                    clonedCard.style.display = 'block';
+                    
+                    // Destacar o bairro específico que condiz com a busca
+                    const clonedBairros = clonedCard.querySelectorAll('.bairros-grid span');
+                    clonedBairros.forEach(span => {
+                        span.classList.add('bairro-item');
+                        if (span.innerText.toLowerCase().includes(term)) {
+                            span.classList.add('highlight');
+                        }
+                    });
+
+                    resultsContainer.appendChild(clonedCard);
+                    foundAny = true;
+                }
+            });
+
+            if (!foundAny) {
+                resultsContainer.innerHTML = '<div class="no-results">Nenhum prestador encontrado nesta região ou bairro.</div>';
+            }
+        });
+    </script>
+</body>
+</html>
