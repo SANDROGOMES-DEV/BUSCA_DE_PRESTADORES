@@ -8,74 +8,74 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
  /* Estilo do Botão */
+/* Container do Botão - Lado Esquerdo */
 .botao-expandir {
     position: fixed;
     top: 20px;
-    right: 20px;
-    z-index: 1001;
+    left: 20px;
+    z-index: 1002; /* Maior que o menu */
     width: 45px;
-    height: 45px;
-    background: #333;
+    height: 40px;
+    background: #333; /* Cor do fundo do botão */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around; /* Distribui os traços */
     align-items: center;
-    gap: 5px;
+    padding: 8px;
 }
 
+/* Os 3 traços (hamburguer) */
 .botao-expandir span {
-    width: 25px;
+    display: block;
+    width: 28px;
     height: 3px;
-    background: white;
+    background-color: white; /* Cor dos traços */
     transition: 0.3s;
 }
 
-/* Menu Diagonal (Oculto por padrão à direita) */
+/* Menu Lateral Reto */
 .menu-diagonal-container {
     position: fixed;
     top: 0;
-    right: -120%; /* Escondido fora da tela */
+    left: -320px; /* Escondido totalmente à esquerda */
     width: 300px;
     height: 100vh;
+    background-color: darkgrey; /* Sua cor solicitada */
     display: flex;
     align-items: center;
-    transition: all 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-    transform: skewX(-10deg); /* Inclinação diagonal */
-    transform-origin: top right;
-    z-index: 1000;
-    box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    transition: all 0.4s ease;
+    z-index: 1001;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.3);
 }
 
-/* Quando o menu estiver aberto */
+/* Estado Aberto */
 .menu-diagonal-container.aberto {
-    right: -50px; /* Ajuste para compensar a inclinação */
+    left: 0;
 }
 
-/* Conteúdo interno (Desentortar o texto) */
+/* Estilo dos Links */
 .links-wrapper {
-    transform: skewX(10deg); /* Inverte o skew para o texto ficar reto */
-    padding-left: 60px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
+    padding-left: 40px;
 }
 
-.nav-link a {
+.links-wrapper a {
     text-decoration: none;
-    color: white;
-    font-size: 1.2rem;
+    color: #1a1a1a; /* Cor do texto (escuro para contrastar com cinza) */
+    font-size: 1.3rem;
     font-weight: bold;
-    display: block;
     transition: 0.3s;
 }
 
-.nav-link a:hover {
-    color: #fdbb2d;
+.links-wrapper a:hover {
+    color: white;
     transform: translateX(10px);
-} 
+}
         
     </style>
 </head>
@@ -92,6 +92,7 @@
         <a class="nav-link" href="index.html">Busca</a>
         <a class="nav-link" href="conversores.html">Conversores</a>
         <a class="nav-link" href="procedimentos.html">Procedimentos</a>
+        <a class="nav-link" href="zonas_RJ.html">Zonas RJ</a>
     </div>
 </nav>
 
