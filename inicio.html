@@ -2,101 +2,61 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INICIO</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-    <style>
- /* Estilo do Botão */
-/* Container do Botão - Lado Esquerdo */
-.botao-expandir {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    z-index: 1002; /* Maior que o menu */
-    width: 45px;
-    height: 40px;
-    background: #333; /* Cor do fundo do botão */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around; /* Distribui os traços */
-    align-items: center;
-    padding: 8px;
-}
-
-/* Os 3 traços (hamburguer) */
-.botao-expandir span {
-    display: block;
-    width: 28px;
-    height: 3px;
-    background-color: white; /* Cor dos traços */
-    transition: 0.3s;
-}
-
-/* Menu Lateral Reto */
-.menu-diagonal-container {
-    position: fixed;
-    top: 0;
-    left: -320px; /* Escondido totalmente à esquerda */
-    width: 300px;
-    height: 100vh;
-    background-color: darkgrey; /* Sua cor solicitada */
-    display: flex;
-    align-items: center;
-    transition: all 0.4s ease;
-    z-index: 1001;
-    box-shadow: 4px 0 10px rgba(0,0,0,0.3);
-}
-
-/* Estado Aberto */
-.menu-diagonal-container.aberto {
-    left: 0;
-}
-
-/* Estilo dos Links */
-.links-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding-left: 40px;
-}
-
-.links-wrapper a {
-    text-decoration: none;
-    color: #1a1a1a; /* Cor do texto (escuro para contrastar com cinza) */
-    font-size: 1.3rem;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.links-wrapper a:hover {
-    color: white;
-    transform: translateX(10px);
-}
-        
-    </style>
+    <title>Sua Aplicação</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
-<button id="btnMenu" class="botao-expandir">
-    <span></span> <span></span>
-    <span></span>
+<button id="btnMenu" class="botao-expandir" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
 </button>
 
-<nav id="menuDiagonal" class="nav-link menu-diagonal-container" style="background-color: darkgrey;">
-    <div class="links-wrapper">
-        <a class="nav-link" href="inicio.html">Início</a>
-        <a class="nav-link" href="index.html">Busca</a>
-        <a class="nav-link" href="conversores.html">Conversores</a>
-        <a class="nav-link" href="procedimentos.html">Procedimentos</a>
-        <a class="nav-link" href="zonas_RJ.html">Zonas RJ</a>
-    </div>
+<div class="inicio"><h1>Seja bem-vindo(a)!</h1></div>
+
+<nav id="menuLateral" class="menu-lateral">
+    <a href="inicio.html" class="nav-link">Início</a>
+    <a href="index.html" class="nav-link">Busca de Prestador</a>
+    <a href="conversores.html" class="nav-link">Conversores</a>
+    <a href="procedimentos.html" class="nav-link">Procedimentos</a>
+    <a href="zonas_RJ.html" class="nav-link">Zonas RJ</a>
 </nav>
 
-<script src="script.js"></script>
- 
+<script>
+    function toggleMenu() {
+        document.getElementById('menuLateral').classList.toggle('aberto');
+    }
+</script>
+<div class="grid-inicio">
+
+    <div class="item-ini">
+        <a href="index.html" class="card-link">
+            <h2>Busca de Prestador</h2>
+            <p>Consulte prestadores por região e tipo de rede.</p>
+    </div>
+
+    <div class="item-ini">
+        <a href="conversores.html" class="card-link">
+            <h2>Conversores</h2>
+            <p>Extraia texto de imagens localmente no seu navegador.</p>
+        </a>
+    </div>
+
+    <div class="item-ini">
+        <a href="procedimentos.html" class="card-link">
+            <h2>Base de Procedimentos</h2>
+            <p>Filtre e consulte códigos TUSS e nomes de procedimentos.</p>
+        </a>
+    </div>
+
+    <div class="item-ini">
+        <a href="zonas_RJ.html" class="card-link">
+            <h2>Zonas RJ</h2>
+            <p>Consulte bairros e regiões das zonas do Rio de Janeiro.</p>
+        </a>
+    </div>
+
+</div>
+
 </body>
 </html>
