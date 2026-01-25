@@ -1,58 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Busca de Rede Médica Pro - SP/RJ</title>
-    <style>
-        :root { --propria: #27ae60; --credenciada: #e74c3c; --primary: #004a8d; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: black; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: auto; }
-        
-        header { text-align: center; margin-bottom: 25px; padding: 20px; background: blue; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        header h1 { color: white; margin: 0; }
-		header p {color: white; /* Todos os textos dentro do header ficam brancos */
-}
-
-        .filter-box {
-            background: blue; padding: 20px; border-radius: 10px;
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 15px; outline: none; }
-        input:focus { border-color: var(--primary); }
-
-        #results { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-
-        .card {
-            background: orange; border-radius: 8px; padding: 20px; border-top: 8px solid #ccc;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative;
-        }
-        .card.propria { border-top-color: var(--propria); }
-        .card.credenciada { border-top-color: var(--credenciada); }
-
-        .type-label {
-            font-size: 10px; font-weight: bold; text-transform: uppercase;
-            padding: 4px 8px; border-radius: 4px; color: white; display: inline-block; margin-bottom: 10px;
-        }
-        .propria-label { background: var(--propria); }
-        .credenciada-label { background: var(--credenciada); }
-
-        .card h3 { margin: 5px 0; color: white; font-size: 1.1em; text-transform: uppercase; }
-        .card p { margin: 4px 0; font-size: 13px; color: white; line-height: 1.4; }
-        
-        .copy-btn {
-            width: 100%; margin-top: 15px; padding: 10px; background: #f8f9fa;
-            border: 1px solid #ddd; border-radius: 5px; cursor: pointer; font-weight: bold;
-            transition: 0.2s;
-        }
-        .copy-btn:hover { background: #e9ecef; border-color: #bbb; }
-
-        @media (max-width: 600px) { .filter-box { grid-template-columns: 1fr; } }
-    </style>
+  
 </head>
 <body>
+
+    <button id="btnMenu" class="botao-expandir" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+</button>
+
+<div class="inicio"><h1>Seja bem-vindo(a)!</h1></div>
+
+<nav id="menuLateral" class="menu-lateral">
+    <a href="inicio.html" class="nav-link">Início</a>
+    <a href="index.html" class="nav-link">Busca de Prestador</a>
+    <a href="conversores.html" class="nav-link">Conversores</a>
+    <a href="procedimentos.html" class="nav-link">Procedimentos</a>
+    <a href="zonas_RJ.html" class="nav-link">Zonas RJ</a>
+</nav>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('menuLateral').classList.toggle('aberto');
+    }
+</script>
 
 <div class="container">
     <header>
@@ -100,44 +76,58 @@
     const resultsDiv = document.getElementById('results');
 
     function render(data) {
+        // Usamos a classe grid-prestadores para manter o layout lado a lado
+        resultsDiv.className = 'grid-prestadores';
         resultsDiv.innerHTML = '';
+        
         if (data.length === 0) {
             resultsDiv.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Nenhum prestador encontrado.</p>';
             return;
         }
 
-        data.forEach(item => {
+        // Renderiza apenas os primeiros 50 para performance
+        data.slice(0, 50).forEach(item => {
             const card = document.createElement('div');
-            card.className = `card ${item.tipo}`;
+            // Usamos a classe card-prestador do seu style.css
+            card.className = `card-prestador ${item.tipo}`;
             
             const textoCopia = `PRESTADOR: ${item.nome}\nCNPJ: ${item.cnpj}\nENDEREÇO: ${item.endereco}\nBAIRRO: ${item.bairro} - ${item.cidade}/${item.estado}\nTEL: ${item.tel}`;
 
             card.innerHTML = `
-                <span class="type-label ${item.tipo}-label">REDE ${item.tipo.toUpperCase()}</span>
-                <p><strong>CNPJ:</strong> ${item.cnpj}</p>
-                <h3>${item.nome}</h3>
-                <p><strong>Endereço:</strong> ${item.endereco}</p>
-                <p><strong>Local:</strong> ${item.bairro} - ${item.cidade}/${item.estado}</p>
-                <p><strong>Telefone:</strong> ${item.tel}</p>
-                <button class="copy-btn" onclick="copiar('${textoCopia.replace(/\n/g, '\\n').replace(/'/g, "\\'")}')">Copiar para Enviar</button>
+                <span class="zona-tag">${item.zona} - ${item.estado}</span>
+                <div class="prestador-nome">${item.nome}</div>
+                
+                <div class="info-contato">
+                    <p><strong>CNPJ:</strong> ${item.cnpj}</p>
+                    <p>${item.endereco}</p>
+                    <p><strong>${item.bairro}</strong> - ${item.cidade}</p>
+                </div>
+
+                <div style="margin-top: auto;">
+                    <div style="color: var(--accent); font-weight: bold; margin-bottom: 10px;">Tel: ${item.tel}</div>
+                    <button class="app-button search-button" style="width: 100%;" 
+                        onclick="copiar('${textoCopia.replace(/\n/g, '\\n').replace(/'/g, "\\'")}')">
+                        Copiar para Enviar
+                    </button>
+                </div>
             `;
             resultsDiv.appendChild(card);
         });
     }
 
+    // Função de filtro inteligente para SP e RJ
     function filtrar() {
         const termo = document.getElementById('mainBusca').value.toLowerCase();
         const zonaValue = document.getElementById('zonaFiltro').value;
         const tipo = document.getElementById('tipoFiltro').value;
 
-        // Identifica se a opção selecionada pertence ao grupo SP ou RJ
         const select = document.getElementById('zonaFiltro');
         const optSelected = select.options[select.selectedIndex];
         const grupo = optSelected.parentNode.label || ""; 
         const estadoAlvo = grupo.includes("SÃO PAULO") ? "SP" : (grupo.includes("RIO DE JANEIRO") ? "RJ" : "");
 
         const filtrados = database.filter(item => {
-            const matchBusca = item.nome.toLowerCase().includes(termo) || item.cnpj.includes(termo);
+            const matchBusca = (item.nome || "").toLowerCase().includes(termo) || (item.cnpj || "").includes(termo);
             const matchTipo = tipo === "" || item.tipo === tipo;
             const matchZona = zonaValue === "" || (item.zona === zonaValue && item.estado === estadoAlvo);
             return matchBusca && matchTipo && matchZona;
@@ -151,7 +141,6 @@
 
     document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', filtrar));
 
-    // Inicialização
     window.onload = () => {
         if (typeof database !== 'undefined') render(database);
     };
