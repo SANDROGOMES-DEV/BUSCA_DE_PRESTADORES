@@ -2,225 +2,119 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procedimentos e Códigos TUSS</title>
-    <style>
-        :root {
-            --primary: #333;
-            --secondary: darkgrey;
-            --accent: #2980b9;
-            --bg: #f4f7f6;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        header {
-            border-bottom: 2px solid var(--secondary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .busca-container {
-            position: sticky;
-            top: 0;
-            background: white;
-            padding: 15px 0;
-            z-index: 10;
-        }
-
-        #inputBusca {
-            width: 100%;
-            padding: 15px;
-            font-size: 1rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        #inputBusca:focus {
-            border-color: var(--primary);
-        }
-
-        .categoria-section {
-            margin-bottom: 30px;
-        }
-
-        .categoria-titulo {
-            background-color: var(--secondary);
-            color: #1a1a1a;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .grid-procedimentos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 10px;
-        }
-
-        .item-proc {
-            background: #fff;
-            border: 1px solid #eee;
-            padding: 12px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .item-proc:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-            border-color: var(--secondary);
-        }
-
-        .codigo {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            color: var(--accent);
-            background: #eef6fc;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        .descricao {
-            font-size: 0.9rem;
-            color: #555;
-            margin-right: 10px;
-        }
-
-        .no-results {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: #888;
-        }
-
-        @media (max-width: 600px) {
-            .grid-procedimentos { grid-template-columns: 1fr; }
-            header { flex-direction: column; align-items: flex-start; }
-        }
-    </style>
+    <title>Sua Aplicação</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
+<button id="btnMenu" class="botao-expandir" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+</button>
 
+<nav id="menuLateral" class="menu-lateral">
+    <a href="inicio.html" class="nav-link">Início</a>
+    <a href="index.html" class="nav-link">Busca de Prestador</a>
+    <a href="conversores.html" class="nav-link">Conversores</a>
+    <a href="procedimentos.html" class="nav-link">Procedimentos</a>
+    <a href="zonas_RJ.html" class="nav-link">Zonas RJ</a>
+</nav>
+
+<script>
+    function toggleMenu() {
+        document.getElementById('menuLateral').classList.toggle('aberto');
+    }
+</script>
 <div class="container">
-    <header>
-        <h1>Procedimentos TUSS</h1>
-        <a href="index.html" style="text-decoration: none; color: var(--accent); font-weight: bold;">← Voltar ao Início</a>
+    <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <h1>Base de Procedimentos</h1>
+        <a href="index.html" style="text-decoration:none; color:var(--accent);">← Voltar</a>
     </header>
 
-    <div class="busca-container">
-        <input type="text" id="inputBusca" placeholder="Pesquise por nome do exame ou código (ex: 36010014)..." onkeyup="filtrar()">
+    <div class="form-group" style="max-width: 700px; margin: 0 auto 2rem auto;">
+        <input type="file" id="file-input" style="display:none;" accept=".xlsx, .xls, .csv">
+        
+        <label>1. Selecione a Base de Dados (Aba):</label>
+        <select id="select-aba" style="margin-bottom: 15px;">
+            <option value="">Aguardando arquivo...</option>
+        </select>
+
+        <label>2. Filtrar Dados:</label>
+        <input type="text" id="search-term" placeholder="Digite nome do procedimento ou código TUSS..." style="margin-bottom: 15px;">
+        
+        <div style="display: flex; gap: 10px;">
+            <button id="search-button" class="app-button" style="flex: 2; background-color: blue;">FILTRAR</button>
+            <button id="btn-carregar" class="app-button" style="flex: 1; background-color: #333; border: 1px dashed var(--batman-yellow);">
+                CARREGAR ARQUIVO
+            </button>
+        </div>
     </div>
 
-    <div id="listaConteudo">
-        <section class="categoria-section">
-            <div class="categoria-titulo">RESSONÂNCIA - RM <span>Exames de Imagem</span></div>
-            <div class="grid-procedimentos">
-                <div class="item-proc"><span class="descricao">CRÂNIO</span> <span class="codigo">36010014</span></div>
-                <div class="item-proc"><span class="descricao">TEMPOROMANDIBULAR</span> <span class="codigo">36010111</span></div>
-                <div class="item-proc"><span class="descricao">FACE</span> <span class="codigo">36010634</span></div>
-                <div class="item-proc"><span class="descricao">ABDOME TOTAL</span> <span class="codigo">36010090</span></div>
-                <div class="item-proc"><span class="descricao">PELVE</span> <span class="codigo">36010103</span></div>
-                <div class="item-proc"><span class="descricao">JOELHO</span> <span class="codigo">36010154</span></div>
-            </div>
-        </section>
-
-        <section class="categoria-section">
-            <div class="categoria-titulo">TOMOGRAFIA - TC <span>Exames de Imagem</span></div>
-            <div class="grid-procedimentos">
-                <div class="item-proc"><span class="descricao">ABDOME TOTAL</span> <span class="codigo">34010157</span></div>
-                <div class="item-proc"><span class="descricao">TORAX</span> <span class="codigo">34010130</span></div>
-                <div class="item-proc"><span class="descricao">CRÂNIO</span> <span class="codigo">34010068</span></div>
-                <div class="item-proc"><span class="descricao">COLUNA LOMBO-SACRA</span> <span class="codigo">34010513</span></div>
-            </div>
-        </section>
-
-        <section class="categoria-section">
-            <div class="categoria-titulo">SESSÕES E TERAPIAS <span>Ambulatorial</span></div>
-            <div class="grid-procedimentos">
-                <div class="item-proc"><span class="descricao">PSICOLOGIA</span> <span class="codigo">50000462</span></div>
-                <div class="item-proc"><span class="descricao">FONOAUDIOLOGIA</span> <span class="codigo">50000616</span></div>
-                <div class="item-proc"><span class="descricao">FISIOTERAPIA</span> <span class="codigo">50000144</span></div>
-                <div class="item-proc"><span class="descricao">PSICOTERAPIA ABA</span> <span class="codigo">60010185</span></div>
-            </div>
-        </section>
-
-        <section class="categoria-section">
-            <div class="categoria-titulo">ULTRASSONOGRAFIA <span>DOPPLER / SEM DOPPLER</span></div>
-            <div class="grid-procedimentos">
-                <div class="item-proc"><span class="descricao">US TRANSVAGINAL</span> <span class="codigo">40901300</span></div>
-                <div class="item-proc"><span class="descricao">US MAMAS</span> <span class="codigo">33010129</span></div>
-                <div class="item-proc"><span class="descricao">US ABDOME TOTAL</span> <span class="codigo">33010021</span></div>
-                <div class="item-proc"><span class="descricao">ECODOPPLER CARÓTIDAS</span> <span class="codigo">40901661</span></div>
-            </div>
-        </section>
+    <div id="search-status" style="text-align: center; color: #666;">
+        Carregue a planilha para começar.
     </div>
 
-    <div id="noResults" class="no-results">Nenhum procedimento encontrado para sua busca.</div>
+    <div id="result-grid" class="grid-procedimentos"></div>
 </div>
 
 <script>
-    function filtrar() {
-        const input = document.getElementById('inputBusca').value.toUpperCase();
-        const itens = document.getElementsByClassName('item-proc');
-        const secoes = document.getElementsByClassName('categoria-section');
-        const noResults = document.getElementById('noResults');
-        let totalVisivel = 0;
+    let dadosCompletos = [];
+    const selectAba = document.getElementById('select-aba');
+    const inputBusca = document.getElementById('search-term');
+    const btnFiltrar = document.getElementById('search-button');
+    const resultGrid = document.getElementById('result-grid');
+    const status = document.getElementById('search-status');
 
-        for (let i = 0; i < itens.length; i++) {
-            const texto = itens[i].textContent || itens[i].innerText;
-            if (texto.toUpperCase().indexOf(input) > -1) {
-                itens[i].style.display = "";
-                totalVisivel++;
-            } else {
-                itens[i].style.display = "none";
-            }
-        }
+    // Função para ler o arquivo Excel/CSV
+    function processarArquivo(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
 
-        // Esconde seções vazias
-        for (let s = 0; s < secoes.length; s++) {
-            const itensNaSecao = secoes[s].getElementsByClassName('item-proc');
-            let temItemVisivel = false;
-            for (let j = 0; j < itensNaSecao.length; j++) {
-                if (itensNaSecao[j].style.display === "") {
-                    temItemVisivel = true;
-                    break;
-                }
-            }
-            secoes[s].style.display = temItemVisivel ? "" : "none";
-        }
+            // Preenche o select com as abas da planilha
+            selectAba.innerHTML = workbook.SheetNames.map(name => `<option value="${name}">${name}</option>`).join('');
+            
+            // Salva os dados da primeira aba por padrão
+            carregarDadosAba(workbook, workbook.SheetNames[0]);
 
-        noResults.style.display = totalVisivel === 0 ? "block" : "none";
+            selectAba.onchange = () => carregarDadosAba(workbook, selectAba.value);
+            status.innerText = "Planilha carregada com sucesso!";
+        };
+        reader.readAsArrayBuffer(file);
     }
-</script>
 
+    function carregarDadosAba(workbook, sheetName) {
+        const worksheet = workbook.Sheets[sheetName];
+        dadosCompletos = XLSX.utils.sheet_to_json(worksheet);
+        status.innerText = `Aba "${sheetName}" carregada. ${dadosCompletos.length} registros.`;
+        renderizar(dadosCompletos);
+    }
+
+    function renderizar(lista) {
+        resultGrid.innerHTML = lista.map(item => `
+            <div class="item-proc">
+                <span class="esp-tag">${item.ESPECIALIDADE || 'Sem Categoria'}</span>
+                <strong style="display:block; margin: 5px 0;">${item.PROCEDIMENTOS || item.Procedimento || 'N/A'}</strong>
+                <span class="codigo">TUSS: ${item.TUSS || 'N/A'}</span>
+            </div>
+        `).join('');
+    }
+
+    // Lógica de Filtro
+    btnFiltrar.onclick = () => {
+        const termo = inputBusca.value.toLowerCase();
+        const filtrados = dadosCompletos.filter(item => {
+            const nome = String(item.PROCEDIMENTOS || '').toLowerCase();
+            const tuss = String(item.TUSS || '').toLowerCase();
+            return nome.includes(termo) || tuss.includes(termo);
+        });
+        renderizar(filtrados);
+        status.innerText = `${filtrados.length} encontrados.`;
+    };
+
+    // Botão para selecionar arquivo manualmente
+    document.getElementById('btn-carregar').onclick = () => document.getElementById('file-input').click();
+    document.getElementById('file-input').onchange = (e) => processarArquivo(e.target.files[0]);
+</script>
 </body>
 </html>
